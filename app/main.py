@@ -175,4 +175,4 @@ async def ingest_file(file: UploadFile = File(...)):
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))  # Ambil port dari Railway
-    uvicorn.run(app, host="0.0.0.0", port=port, workers=2)
+    uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
