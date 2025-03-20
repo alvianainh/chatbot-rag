@@ -5,6 +5,8 @@ import os
 import requests
 from dotenv import load_dotenv
 from supabase import create_client
+import torch
+import atexit
 
 dotenv_path = "C:/Grader/chatbot-rag/.env" 
 load_dotenv(dotenv_path)
@@ -30,3 +32,7 @@ LLM_MODEL = HuggingFaceInferenceAPI(
 
 EMBED_MODEL = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
 Settings.embed_model = EMBED_MODEL 
+
+
+if torch.cuda.is_available():
+    atexit.register(torch.cuda.empty_cache)

@@ -3,6 +3,7 @@ from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
 from app.config import LLM_MODEL, EMBED_MODEL
 from llama_index.core import Settings
 from llama_index.core.schema import Document, TextNode
+import torch
 
 DATA_FOLDER = "./data"
 
@@ -40,6 +41,9 @@ def get_response(query):
 
     # Debugging: Cek hasil query
     print(f"Response from query engine: {response}")
+
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
     
     return response
 
@@ -51,6 +55,9 @@ def initialize_index():
     if documents:
         index = VectorStoreIndex.from_documents(documents)
         query_engine = index.as_query_engine()
+
+        if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
 initialize_index()
 
@@ -82,7 +89,9 @@ def add_document(file_path: str):
             index.add_documents(new_docs)
             query_engine = index.as_query_engine()
 
-            print(f"DEBUG: Documents added to the index: {[doc.doc_id for doc in new_docs]}")  # Debugging
+            print(f"DEBUG: Documents added to the index: {[doc.doc_id for doc in new_docs]}")
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
         except AttributeError as e:
             print(f"ERROR: {e}") 
             raise
