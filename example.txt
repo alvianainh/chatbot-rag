@@ -1,0 +1,28 @@
+[GENERAL INFORMATION]  
+Selamat datang di layanan pelanggan AI! Kami siap membantu Anda 24/7 dengan berbagai informasi terkait layanan kami.  
+
+[CUSTOMER SERVICE FAQ]  
+Q: Bagaimana cara menghubungi customer service?  
+A: Anda dapat menghubungi customer service melalui email support@company.com atau WhatsApp di +62 812-3456-7890.  
+
+Q: Bagaimana cara mengajukan refund?  
+A: Untuk mengajukan refund, silakan ajukan permohonan melalui akun Anda di website kami atau hubungi customer service. Proses refund membutuhkan waktu 3-5 hari kerja.  
+
+Q: Apa saja metode pembayaran yang tersedia?  
+A: Kami menerima pembayaran melalui transfer bank, kartu kredit, e-wallet (OVO, GoPay, Dana), dan PayPal.  
+
+Q: Bagaimana cara melacak pesanan saya?  
+A: Anda bisa melacak pesanan melalui website kami dengan memasukkan nomor pesanan pada halaman "Tracking".  
+
+[SUPPORT & TROUBLESHOOTING]  
+Q: Saya lupa password akun saya, bagaimana cara meresetnya?  
+A: Anda bisa mengklik tombol "Lupa Password" di halaman login dan mengikuti instruksi untuk mengatur ulang password.  
+
+Q: Saya mengalami masalah teknis dengan aplikasi, apa yang harus saya lakukan?  
+A: Silakan coba restart aplikasi, periksa koneksi internet, dan pastikan aplikasi Anda diperbarui ke versi terbaru. Jika masih mengalami masalah, hubungi tim support kami.  
+
+[CONTACT INFORMATION]  
+Email: support@company.com  
+Telepon: 0800-1234-5678  
+Website: www.company.com  
+WhatsApp: +62 812-3456-7890  
