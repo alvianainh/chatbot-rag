@@ -57,7 +57,7 @@ def initialize_index():
         query_engine = index.as_query_engine()
 
         if torch.cuda.is_available():
-        torch.cuda.empty_cache()
+            torch.cuda.empty_cache()
 
 initialize_index()
 
