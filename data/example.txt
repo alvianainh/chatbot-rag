@@ -1,28 +1,28 @@
-[GENERAL INFORMATION]  
-Selamat datang di layanan pelanggan AI! Kami siap membantu Anda 24/7 dengan berbagai informasi terkait layanan kami.  
+[GENERAL INFORMATION]
+Welcome to the AI-powered customer support service! We are available 24/7 to assist you with any inquiries regarding our services.
 
-[CUSTOMER SERVICE FAQ]  
-Q: Bagaimana cara menghubungi customer service?  
-A: Anda dapat menghubungi customer service melalui email support@company.com atau WhatsApp di +62 812-3456-7890.  
+[CUSTOMER SERVICE FAQ]
+Q: How can I contact customer support?
+A: You can reach our customer support via email at support@purple-box.app or WhatsApp at +62 812-3456-7890.
 
-Q: Bagaimana cara mengajukan refund?  
-A: Untuk mengajukan refund, silakan ajukan permohonan melalui akun Anda di website kami atau hubungi customer service. Proses refund membutuhkan waktu 3-5 hari kerja.  
+Q: How do I request a refund?
+A: To request a refund, please submit your request through your account on our website or contact customer support. Refund processing takes 3-5 business days.
 
-Q: Apa saja metode pembayaran yang tersedia?  
-A: Kami menerima pembayaran melalui transfer bank, kartu kredit, e-wallet (OVO, GoPay, Dana), dan PayPal.  
+Q: What payment methods are available?
+A: We accept payments via bank transfer, credit card, e-wallets (OVO, GoPay, Dana), and PayPal.
 
-Q: Bagaimana cara melacak pesanan saya?  
-A: Anda bisa melacak pesanan melalui website kami dengan memasukkan nomor pesanan pada halaman "Tracking".  
+Q: How can I track my order?
+A: You can track your order on our website by entering your order number on the "Tracking" page.
 
-[SUPPORT & TROUBLESHOOTING]  
-Q: Saya lupa password akun saya, bagaimana cara meresetnya?  
-A: Anda bisa mengklik tombol "Lupa Password" di halaman login dan mengikuti instruksi untuk mengatur ulang password.  
+[SUPPORT & TROUBLESHOOTING]
+Q: I forgot my account password. How can I reset it?
+A: Click the "Forgot Password" button on the login page and follow the instructions to reset your password.
 
-Q: Saya mengalami masalah teknis dengan aplikasi, apa yang harus saya lakukan?  
-A: Silakan coba restart aplikasi, periksa koneksi internet, dan pastikan aplikasi Anda diperbarui ke versi terbaru. Jika masih mengalami masalah, hubungi tim support kami.  
+Q: I’m experiencing technical issues with the application. What should I do?
+A: Please try restarting the app, checking your internet connection, and ensuring you have the latest version installed. If the issue persists, contact our support team.
 
-[CONTACT INFORMATION]  
-Email: support@company.com  
-Telepon: 0800-1234-5678  
-Website: www.company.com  
-WhatsApp: +62 812-3456-7890  
+[CONTACT INFORMATION]
+📧 Email: support@purple-box.app
+📞 Phone: 0800-1234-5678
+🌍 Website: www.purple-box.app
+📲 WhatsApp: +62 812-3456-7890

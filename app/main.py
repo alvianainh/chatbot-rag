@@ -2,6 +2,7 @@ import os
 import shutil
 import requests
 import time
+import logging
 from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, status, Header
 from pydantic import BaseModel
@@ -10,6 +11,11 @@ from fastapi.security import OAuth2PasswordBearer
 import jwt
 from datetime import datetime, timedelta
 from app.model import add_document, DATA_FOLDER, get_response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 
 load_dotenv(override=True)
 
@@ -21,7 +27,17 @@ if not HF_TOKEN:
 
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}", "Content-Type": "application/json"}
 
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 SUPABASE_PROJECT_URL="https://yixkvcyyvcmnefjffrql.supabase.co"
 
@@ -70,7 +86,7 @@ def query_huggingface(prompt):
     
     try:
         response = requests.post(API_URL, headers=HEADERS, json=payload)
-        response.raise_for_status()  # Akan raise error jika status bukan 2xx
+        response.raise_for_status()  
         
         json_response = response.json()
         if isinstance(json_response, list) and "generated_text" in json_response[0]:
@@ -81,6 +97,26 @@ def query_huggingface(prompt):
         raise HTTPException(status_code=500, detail=f"Request error: {str(e)}")
     except ValueError as e:
         raise HTTPException(status_code=500, detail=f"Parsing error: {str(e)}")
+
+# Your /register endpoint
+@app.post("/register")
+async def register(request: AuthRequest):
+    try:
+        user = supabase.auth.sign_up({
+            "email": request.email,
+            "password": request.password
+        })
+
+        access_token = create_access_token({"email": request.email})
+        return JSONResponse(
+            content={"access_token": access_token, "token_type": "bearer"},
+        )
+
+    except Exception as e:
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=400,
+        )
 
 @app.post("/token", response_model=AuthResponse)
 async def login_for_access_token(request: AuthRequest):
@@ -97,20 +133,6 @@ async def login_for_access_token(request: AuthRequest):
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid credentials or error: {str(e)}")
 
-
-@app.post("/register", response_model=AuthResponse)
-async def register(request: AuthRequest):
-    try:
-        user = supabase.auth.sign_up({
-            "email": request.email,
-            "password": request.password
-        })
-        
-        access_token = create_access_token({"email": request.email})
-        return {"access_token": access_token, "token_type": "bearer"}
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Invalid credentials or error: {str(e)}")
 
 @app.get("/")
 def home():
