@@ -13,10 +13,7 @@ from datetime import datetime, timedelta
 from app.model import add_document, DATA_FOLDER, get_response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import torch
-import atexit
+
 
 
 load_dotenv(override=True)
@@ -41,7 +38,7 @@ app.add_middleware(
 )
 
 
-SUPABASE_PROJECT_URL="https://yixkvcyyvcmnefjffrql.supabase.co"
+SUPABASE_URL="https://yixkvcyyvcmnefjffrql.supabase.co"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -68,7 +65,7 @@ class QueryRequest(BaseModel):
 def verify_token(token: str):
     """Verify token to Supabase."""
     headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(f"{SUPABASE_PROJECT_URL}/auth/v1/user", headers=headers)
+    response = requests.get(f"{SUPABASE_URL}/auth/v1/user", headers=headers)
 
     if response.status_code != 200:
         raise HTTPException(status_code=401, detail="Invalid token")
@@ -178,7 +175,3 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))  # Ambil port dari Railway
     uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
-
-
-if torch.cuda.is_available():
-    atexit.register(torch.cuda.empty_cache)
