@@ -97,7 +97,6 @@ def query_huggingface(prompt):
     except ValueError as e:
         raise HTTPException(status_code=500, detail=f"Parsing error: {str(e)}")
 
-# Your /register endpoint
 @app.post("/register")
 async def register(request: AuthRequest):
     try:
@@ -125,7 +124,7 @@ async def login_for_access_token(request: AuthRequest):
             "password": request.password
         })
 
-        access_token = create_access_token({"email": request.email})  # Buat token JWT sendiri
+        access_token = create_access_token({"email": request.email}) 
         
         return {"access_token": access_token, "token_type": "bearer"}
     
@@ -173,5 +172,5 @@ async def ingest_file(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))  # Ambil port dari Railway
+    port = int(os.environ.get("PORT", 8000))  
     uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
