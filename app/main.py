@@ -2,7 +2,6 @@ import os
 import shutil
 import requests
 import time
-import logging
 from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, status, Header
 from pydantic import BaseModel
@@ -12,9 +11,6 @@ import jwt
 from datetime import datetime, timedelta
 from app.model import add_document, DATA_FOLDER, get_response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-
-
 
 load_dotenv(override=True)
 
@@ -22,10 +18,10 @@ API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Inst
 HF_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 if not HF_TOKEN:
-    raise ValueError("HUGGINGFACEHUB_API_TOKEN not found. Make sure it's in .env!")
+    raise ValueError("HUGGINGFACEHUB_API_TOKEN not found. Make sure it is in .env!")
 
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}", "Content-Type": "application/json"}
-
+print("TOKEN:", HF_TOKEN[:10] + "")  
 
 app = FastAPI()
 
@@ -33,12 +29,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"], 
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["*"], 
+    allow_headers=["*"], 
 )
-
-
-SUPABASE_URL="https://yixkvcyyvcmnefjffrql.supabase.co"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -48,7 +41,6 @@ if not SECRET_KEY:
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
 
 class AuthRequest(BaseModel):
     email: str
@@ -62,22 +54,25 @@ class QueryRequest(BaseModel):
     question: str
 
 
-def verify_token(token: str):
-    """Verify token to Supabase."""
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get(f"{SUPABASE_URL}/auth/v1/user", headers=headers)
-
-    if response.status_code != 200:
+def verify_token(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print("Decoded Token Payload:", payload)  
+        email: str = payload.get("email")  
+        if email is None:
+            raise HTTPException(status_code=401, detail="Invalid token: No email found")
+        return {"email": email}
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    return response.json()
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
+def create_access_token(email: str, expires_delta: timedelta | None = None):
+    to_encode = {"email": email}
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
 
 def query_huggingface(prompt):
     """Sending a request to the Hugging Face API model"""
@@ -85,36 +80,18 @@ def query_huggingface(prompt):
     
     try:
         response = requests.post(API_URL, headers=HEADERS, json=payload)
-        response.raise_for_status()  
+        response.raise_for_status() 
         
         json_response = response.json()
         if isinstance(json_response, list) and "generated_text" in json_response[0]:
             return json_response[0]["generated_text"]
-        return "No response generated."
+        else:
+            raise ValueError(f"Incorrect response format:{json_response}")
 
     except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Request error: {str(e)}")
+        raise Exception(f"Request error: {str(e)}")
     except ValueError as e:
-        raise HTTPException(status_code=500, detail=f"Parsing error: {str(e)}")
-
-@app.post("/register")
-async def register(request: AuthRequest):
-    try:
-        user = supabase.auth.sign_up({
-            "email": request.email,
-            "password": request.password
-        })
-
-        access_token = create_access_token({"email": request.email})
-        return JSONResponse(
-            content={"access_token": access_token, "token_type": "bearer"},
-        )
-
-    except Exception as e:
-        return JSONResponse(
-            content={"error": str(e)},
-            status_code=400,
-        )
+        raise Exception(f"Parsing error: {str(e)}")
 
 @app.post("/token", response_model=AuthResponse)
 async def login_for_access_token(request: AuthRequest):
@@ -124,7 +101,7 @@ async def login_for_access_token(request: AuthRequest):
             "password": request.password
         })
 
-        access_token = create_access_token({"email": request.email}) 
+        access_token = create_access_token({"sub": request.email}) 
         
         return {"access_token": access_token, "token_type": "bearer"}
     
@@ -132,26 +109,41 @@ async def login_for_access_token(request: AuthRequest):
         raise HTTPException(status_code=401, detail=f"Invalid credentials or error: {str(e)}")
 
 
+@app.post("/register", response_model=AuthResponse)
+async def register(request: AuthRequest):
+    """Endpoint for new user registration."""
+    try:
+        user = supabase.auth.sign_up({
+            "email": request.email,
+            "password": request.password
+        })
+    
+        access_token = user.session.access_token
+
+        return {"access_token": access_token, "token_type": "bearer"}
+    
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error during registration: {str(e)}")
+
+
+
 @app.get("/")
 def home():
     return {"message": "API is running!"} 
 
 @app.post("/query")
-def query_from_hf(request: QueryRequest, authorization: str = Header(None)):
-    """The /query endpoint can only be accessed with a valid token."""
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid token")
+def query_from_hf(request: QueryRequest, token: dict = Depends(verify_token)):
+    try:
+        response = query_huggingface(request.question)
 
-    token = authorization.split("Bearer ")[-1] 
-    user = verify_token(token) 
+        if response.lower().startswith(request.question.lower()):
+            response = response[len(request.question):].strip()
 
-    response = query_huggingface(request.question)
+        return {"answer": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return {
-        "user": user["email"],
-        "question": request.question,
-        "answer": response
-    }
+
 
 @app.post("/ingest")
 async def ingest_file(file: UploadFile = File(...)):
@@ -163,6 +155,7 @@ async def ingest_file(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
+
         add_document(file_path)
     
         return {"message": f"File {file.filename} successfully uploaded and processed."}
@@ -172,6 +165,4 @@ async def ingest_file(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    print(f"✅ Running FastAPI on port {port}")  # Debugging
-    uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
+    uvicorn.run(app, host="0.0.0.0", port=8000, workers=1)

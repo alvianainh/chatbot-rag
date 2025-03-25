@@ -9,8 +9,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/chatbot" element={<Chatbot />} />
+        <Route path="/token" element={<Login />} />
+        <Route path="/query" element={<Chatbot />} />
       </Routes>
     </Router>
   );

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -9,27 +10,27 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true); 
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:8000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-        mode: "cors", 
-        credentials: "include",  
+        mode: "cors",
+        credentials: "include",
       });
 
       const data = await response.json();
       setLoading(false);
 
       if (!response.ok) {
-        throw new Error(data.detail || data.error || "Registrasi gagal");
+        throw new Error(data.detail || data.error || "Registration failed");
       }
 
       localStorage.setItem("token", data.access_token);
-      alert("Registrasi berhasil! Silakan login.");
-      navigate("/token"); 
+      alert("Registration successful! Please login.");
+      navigate("/token");
     } catch (error) {
       setLoading(false);
       alert(error.message);
@@ -37,9 +38,9 @@ function Register() {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="email"
           placeholder="Email"
@@ -47,7 +48,6 @@ function Register() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <br />
         <input
           type="password"
           placeholder="Password"
@@ -55,7 +55,6 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <br />
         <button type="submit" disabled={loading}>
           {loading ? "Registering..." : "Register"}
         </button>

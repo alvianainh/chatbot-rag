@@ -1,45 +1,64 @@
-import { useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
+
 
 function Login() {
-  useEffect(() => {
-    const form = document.getElementById("login-form");
-    if (form) {
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
 
-        try {
-          const response = await fetch("http://localhost:8000/token", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-          });
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.detail || "Login gagal");
-          }
-
-          localStorage.setItem("token", data.access_token);
-          alert("Login berhasil!");
-          window.location.href = "/query";
-        } catch (error) {
-          alert(error.message);
-        }
+    try {
+      const response = await fetch("http://localhost:8000/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
+
+      const data = await response.json();
+      setLoading(false);
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Login failed");
+      }
+
+      localStorage.setItem("token", data.access_token);
+      alert("Login successful!");
+      navigate("/query");
+    } catch (error) {
+      setLoading(false);
+      alert(error.message);
     }
-  }, []);
+  };
 
   return (
-    <div>
-      <h1>Halaman Login</h1>
-      <form id="login-form">
-        <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <button type="submit">Login</button>
+    <div className="login-container"> 
+      <h2>Login</h2>
+      <form className="login-form" onSubmit={handleSubmit}> 
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <br />
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

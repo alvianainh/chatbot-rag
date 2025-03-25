@@ -18,7 +18,6 @@ def load_documents():
     
     documents = []
     for i, node in enumerate(nodes):
-        print(f"Node {i}: {node}, Type: {type(node)}, Attributes: {dir(node)}")
 
         if isinstance(node, Document):
             documents.append(node)
@@ -35,10 +34,8 @@ def get_response(query):
 
     print(f"Received query: {query}")
     
-    # Gunakan query engine untuk mendapatkan jawaban
     response = query_engine.query(query)
 
-    # Debugging: Cek hasil query
     print(f"Response from query engine: {response}")
     
     return response
@@ -65,7 +62,6 @@ def add_document(file_path: str):
     
     new_docs = []
     for i, node in enumerate(new_nodes):
-        print(f"DEBUG: Node {i}: {type(node)}, Attributes: {dir(node)}")  
 
         if isinstance(node, Document):
             new_docs.append(node)

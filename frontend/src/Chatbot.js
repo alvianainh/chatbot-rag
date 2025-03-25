@@ -1,39 +1,66 @@
-import { useEffect } from "react";
+import { useState } from "react";
+import "./Chatbot.css"; 
 
 function Chatbot() {
-  useEffect(() => {
-    const form = document.getElementById("chatbot-form");
-    if (form) {
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const message = document.getElementById("message").value;
+  const [message, setMessage] = useState("");
+  const [chats, setChats] = useState([]); 
+  const [loading, setLoading] = useState(false);
 
-        try {
-          const response = await fetch("http://localhost:8000/query", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message }),
-          });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!message.trim()) return;
 
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.detail || "Gagal mendapatkan respons chatbot");
-          }
+    setLoading(true);
+    const newChat = { sender: "user", text: message };
+    setChats((prevChats) => [...prevChats, newChat]);
+    setMessage(""); 
 
-          alert(`Chatbot: ${data.response}`);
-        } catch (error) {
-          alert(error.message);
-        }
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token not found. Please login.");
+
+      const res = await fetch("http://localhost:8000/query", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ question: newChat.text }),
       });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to get response.");
+
+      const botReply = { sender: "bot", text: data.answer };
+      setChats((prevChats) => [...prevChats, botReply]);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
 
   return (
-    <div>
+    <div className="chatbot-container">
       <h1>Chatbot</h1>
-      <form id="chatbot-form">
-        <input type="text" id="message" placeholder="Ketik pesan..." required />
-        <button type="submit">Kirim</button>
+      <div className="chatbox">
+        {chats.map((chat, index) => (
+          <div key={index} className={`chat-message ${chat.sender}`}>
+            {chat.text}
+          </div>
+        ))}
+      </div>
+      <form className="chat-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type a message..."
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Sending..." : "Send"}
+        </button>
       </form>
     </div>
   );

@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('/img/Bg-register.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(64, 96, 143, 0.4);
+    font-family: 'Poppins', sans-serif;
+    border-radius: 12px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3), 
+                0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 150px;
+    animation: fadeIn 0.8s ease-in-out;
+    transition: all 0.3s ease;
+}
+
+.login-container:hover {
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.35), 
+                0px 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    font-size: 26px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form input {
+    width: 93%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    color: #224061;
+    font-size: 16px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-form input:focus {
+    border-color: #5a87b8;
+    box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+
+.login-form button {
+    background: #5a87b8;
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-form button:hover {
+    background: #224061;
+    transform: scale(1.05);
+}
+
+.login-form button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}

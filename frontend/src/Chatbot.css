@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+.chatbot-container {
+    width: 100%;
+    max-width: 700px;
+    height: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(64, 96, 143, 0.5); 
+    font-family: 'Poppins', sans-serif;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 0.8s ease-in-out;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.chatbox {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #dbedff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-message {
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.chat-message.user {
+    align-self: flex-end;
+    background: #5a87b8;
+    color: rgb(255, 255, 255);
+    text-align: right;
+}
+
+.chat-message.bot {
+    align-self: flex-start;
+    background: #ffffff;
+    color: black;
+    text-align: left;
+}
+
+.chat-form {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.chat-form input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.chat-form input:focus {
+    border-color: #5a87b8;
+    box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+.chat-form button {
+    background: #5a87b8;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.chat-form button:hover {
+    background: #224061;
+    transform: scale(1.05);
+}
+
+.chat-form button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
