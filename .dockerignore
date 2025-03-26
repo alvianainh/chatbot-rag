@@ -3,3 +3,7 @@ node_modules
 __pycache__
 .env
 *.log
+*.csv
+*.sqlite
+*.db
+venv
