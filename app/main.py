@@ -128,11 +128,11 @@ async def register(request: AuthRequest):
 
 
 @app.get("/")
-def home():
+async def home():
     return {"message": "API is running!"} 
 
 @app.post("/query")
-def query_from_hf(request: QueryRequest, token: dict = Depends(verify_token)):
+async def query_from_hf(request: QueryRequest, token: dict = Depends(verify_token)):
     try:
         response = query_huggingface(request.question)
 
