@@ -108,12 +108,22 @@ Response:
   "message": "File <filename> successfully uploaded and processed."
 }
 
-## Note
 
-I apologize for the current limitation of the project. The provided code only includes the backend implementation, and there is no frontend interface at this moment. Unfortunately, due to some challenges related to CORS that have been difficult to resolve within the given timeframe, I was only able to complete the backend development.
+## Running the Application
+Run the frontend application with the following command
 
-However, the backend is fully functional and can be tested via tools like **Postman** or other API testing tools. All endpoints, as described in the API Endpoints section, are operational and can be accessed by including a valid **JWT token** in the `Authorization` header where required.
+ ```npm run start```
 
-I hope to continue the development of this project in the future, including building the frontend interface. 
+ The application will run at http://localhost:3000 by default.
 
-Thank you for your understanding, and I appreciate your support as I work through these limitations.
+ ## Using the Application
+
+ Registration/Login
+Users must first register through the registration page.
+
+After registering, users can log in to obtain an access token.
+
+Using the AI Chatbot
+After logging in, users can ask questions to the chatbot.
+
+
